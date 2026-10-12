@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - my-branch 
+      - my-branch
 jobs:
   # 1. TRABAJO DE PRUEBAS (CON BASE DE DATOS INCLUIDA)
   tests:
