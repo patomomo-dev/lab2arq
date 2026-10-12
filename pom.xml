@@ -19,6 +19,9 @@
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
 		<mapstruct.version>1.5.5.Final</mapstruct.version>
+		<sonar.projectKey>patomomo-dev_lab2arq3</sonar.projectKey>
+		<sonar.organization>patomomo-dev</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
 
 	<dependencies>

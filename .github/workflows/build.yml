@@ -43,3 +43,36 @@ jobs:
 
       - name: Run Tests
         run: mvn -B test
+
+
+  # 2. TRABAJO DE SONARCLOUD
+  sonar:
+    name: SonarCloud analysis
+    needs: tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Build project (skip tests to speed up)
+        run: mvn -B clean verify -DskipTests
+
+      - name: SonarCloud analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: >
+          mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+          -Dsonar.projectKey=patomomo-dev_lab2arq3
+          -Dsonar.organization=patomomo-dev
+          -Dsonar.host.url=https://sonarcloud.io
+          -Dsonar.token=$SONAR_TOKEN
