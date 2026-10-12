@@ -76,3 +76,26 @@ jobs:
           -Dsonar.organization=patomomo-dev
           -Dsonar.host.url=https://sonarcloud.io
           -Dsonar.token=$SONAR_TOKEN
+
+  # 3. TRABAJO DE EMPAQUETADO Y DOCKER
+  build:
+    needs: sonar
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: '17'
+
+      - name: Build with Maven
+        run: mvn -B package -DskipTests --file pom.xml
+
+      - name: Upload JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifact
+          # Usamos un comodín para que tome el JAR del banco sin importar cómo se llame
+          path: target/lab2arq.jar
