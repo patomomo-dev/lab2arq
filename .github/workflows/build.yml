@@ -1,0 +1,46 @@
+name: CI/CD Pipeline
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - my-branch 
+jobs:
+  # 1. TRABAJO DE PRUEBAS (CON BASE DE DATOS INCLUIDA)
+  tests:
+    name: Unit tests
+    runs-on: ubuntu-latest
+
+    # ---> ESTO SOLUCIONA EL ERROR DE LAS PRUEBAS <---
+    # Levanta un MySQL temporal idéntico al que pide la guía del Lab 1
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: banco
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -u root -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: '17'
+
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Run Tests
+        run: mvn -B test
