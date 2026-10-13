@@ -5,6 +5,10 @@ COPY mvnw .
 COPY .mvn .mvn
 COPY pom.xml .
 COPY src src
+
+# SOLUCIÓN: Otorgar permisos de ejecución al archivo mvnw
+RUN chmod +x mvnw
+
 # Compila el proyecto generando el .jar
 RUN ./mvnw clean package -DskipTests
 
